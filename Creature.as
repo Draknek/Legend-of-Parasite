@@ -87,9 +87,9 @@ package
 		
 		public function get angle (): Number
 		{
-			if (dx > 0.4) return -90;
-			if (dx < -0.4) return 90;
-			if (dy > 0.4) return 180;
+			if (dx > 0.6) return -90;
+			if (dx < -0.6) return 90;
+			if (dy > 0.6) return 180;
 			return 0;
 		}
 		
@@ -111,7 +111,7 @@ package
 				else delta = 1;
 			}
 			
-			this["d"+axis] = delta //* 0.25;
+			this["d"+axis] = delta * 0.25;
 		}
 	}
 }
