@@ -34,8 +34,7 @@ package
 		
 		public function doMovement (): void
 		{
-			x += dx;
-			y += dy;
+			moveBy(dx, dy, type+"_solid");
 		}
 		
 		public function doInput (): void

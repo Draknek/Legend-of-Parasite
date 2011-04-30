@@ -19,17 +19,20 @@ package
 			
 			graphic = sprite = new Spritemap(HeroGfx, 16, 16);
 			
+			sprite.centerOO();
+			
 			sprite.add("down", [0, 1], 0.1);
 			
 			sprite.play("down");
+			
+			setHitbox(8, 8, 4, 0);
 			
 			isPlayer = true;
 		}
 		
 		public override function doMovement (): void
 		{
-			x += dx;
-			y += dy;
+			moveBy(dx, dy, "hero_solid");
 			
 			sprite.rate = isMoving ? 1 : 0;
 			
