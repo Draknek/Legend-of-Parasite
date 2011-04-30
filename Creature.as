@@ -18,6 +18,11 @@ package
 		public var wasMoving:Boolean = false;
 		public var isMoving:Boolean = false;
 		
+		public var preferAxis:String = "x";
+		
+		public var canDiagonal:Boolean = false;
+		public const DIAGONAL_SCALE:Number = 1.0/Math.sqrt(2.0);
+		
 		public function Creature (_x:Number = 0, _y:Number = 0)
 		{
 			x = _x;
@@ -50,6 +55,9 @@ package
 			dx = Number(Input.check(Key.RIGHT)) - Number(Input.check(Key.LEFT));
 			dy = Number(Input.check(Key.DOWN)) - Number(Input.check(Key.UP));
 			
+			if (Input.pressed(Key.LEFT) || Input.pressed(Key.RIGHT)) preferAxis = "y";
+			else if (Input.pressed(Key.UP) || Input.pressed(Key.DOWN)) preferAxis = "x";
+			
 			doAction1 = Input.pressed(Key.X);
 			doAction2 = Input.pressed(Key.C);
 		}
@@ -58,6 +66,21 @@ package
 		{
 			wasMoving = isMoving;
 			doInput();
+			
+			if (canDiagonal && dx && dy) {
+				dx *= DIAGONAL_SCALE;
+				dy *= DIAGONAL_SCALE;
+			}
+			
+			if (! canDiagonal) {
+				if (dx && dy) {
+					this["d"+preferAxis] = 0;
+				}
+				
+				if (dx) straighten("y");
+				else if (dy) straighten("x");
+			}
+			
 			isMoving = (dx || dy);
 			doMovement();
 		}
@@ -68,6 +91,27 @@ package
 			if (dx < -0.4) return 90;
 			if (dy > 0.4) return 180;
 			return 0;
+		}
+		
+		public function straighten (axis:String):void
+		{
+			var N:int = 2;
+			
+			var p:int = this[axis] % (N*2);
+			
+			var delta:int = 0;
+			
+			if (p == 0) return
+			else if (p < N) delta = -1;
+			else if (p > N) delta = 1;
+			else if (p == N) {
+				p = this[axis] % (N*4);
+				
+				if (p < N*2) delta = -1;
+				else delta = 1;
+			}
+			
+			this["d"+axis] = delta //* 0.25;
 		}
 	}
 }

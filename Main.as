@@ -6,10 +6,9 @@ package
 	{
 		public function Main () 
 		{
-			super(256, 160, 60, true);
-			FP.world = new Level();
-			FP.screen.scale = 2;
-			FP.console.enable();
+			super(256*2, 160*2, 60, true);
+			//FP.screen.scale = 2;
+			//FP.console.enable();
 		}
 		
 		public override function init (): void
@@ -17,6 +16,11 @@ package
 			sitelock("draknek.org");
 			
 			super.init();
+			
+			FP.width *= 0.5;
+			FP.height *= 0.5;
+			
+			FP.world = new Level();
 		}
 		
 		public function sitelock (allowed:*):Boolean

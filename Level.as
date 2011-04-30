@@ -15,8 +15,8 @@ package
 		public var tiles:Tilemap;
 		public var solidMaskE:Entity;
 		
-		public const WIDTH:int = 256;
-		public const HEIGHT:int = 160;
+		public const WIDTH:int = 2560;
+		public const HEIGHT:int = 1600;
 		
 		public const GRASS:uint = 0;
 		public const SAND:uint = 1;
@@ -34,11 +34,9 @@ package
 		{
 			tiles = new Tilemap(TilesGfx, WIDTH, HEIGHT, 16, 16);
 			
-			for (var i:int = 0; i < tiles.columns; i++) {
-				for (var j:int = 0; j < tiles.rows; j++) {
-					tiles.setTile(i, j, FP.rand(4));
-				}
-			}
+			var i:int, j:int;
+			
+			tiles.setRect(0, 0, tiles.rows, tiles.columns, 0);
 			
 			tiles.setRect(7, 4, 2, 2, 1);
 			
@@ -97,14 +95,14 @@ package
 			
 			calculateMasks();
 			
-			player = new Leever(FP.width*0.5, FP.height*0.5);
+			player = new Octorok(FP.width*0.5, FP.height*0.5);
 			
 			player.isPlayer = true;
 			
 			add(player);
 			
-			add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
-			add(new Leever(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			//add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			//add(new Leever(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 		}
 		

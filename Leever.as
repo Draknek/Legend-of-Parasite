@@ -36,8 +36,6 @@ package
 			
 			sprite.visible = true;
 			
-			trace(sprite.currentAnim);
-			
 			if (doAction1) {
 				switching = true;
 				
