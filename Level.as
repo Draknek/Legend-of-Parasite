@@ -81,6 +81,11 @@ package
 		public override function render (): void
 		{
 			super.render();
+			
+			if (editMode) {
+				Draw.line(FP.width - 8, 0, FP.width - 8, FP.height*2, 0x0)
+				Draw.line(0, FP.height - 8, FP.width*2, FP.height - 8, 0x0)
+			}
 		}
 		
 		public function handleEditing ():void
