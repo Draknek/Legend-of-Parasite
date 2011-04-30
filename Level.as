@@ -5,10 +5,12 @@ package
 	import net.flashpunk.masks.*;
 	import net.flashpunk.utils.*;
 	
-	public class Level extends World
+	public class Level extends LoadableWorld
 	{
 		[Embed(source="images/tiles.png")] public static const TilesGfx: Class;
 		[Embed(source="images/rocks.png")] public static const RocksGfx: Class;
+		
+		public var editMode:Boolean = false;
 		
 		public var player:Creature;
 		
@@ -34,13 +36,77 @@ package
 		{
 			tiles = new Tilemap(TilesGfx, WIDTH, HEIGHT, 16, 16);
 			
+			tiles.setRect(0, 0, tiles.columns, tiles.rows, ROCK);
+			
+			tiles.setRect(1, 1, tiles.columns - 2, tiles.rows - 2, GRASS);
+			
+			tiles.setRect(7, 4, 2, 2, SAND);
+			
+			addGraphic(tiles);
+			
+			reloadData();
+			
+			player = new Octorok(FP.width*0.5, FP.height*0.5);
+			
+			player.isPlayer = true;
+			
+			add(player);
+			
+			//add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			//add(new Leever(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+		}
+		
+		public override function update (): void
+		{
+			super.update();
+			
+			if (Input.pressed(Key.R)) FP.world = new Level;
+			
+			if (Input.pressed(Key.E)) {
+				editMode = ! editMode;
+				
+				FP.screen.scale = editMode ? 1 : 2;
+				
+				if (! editMode) {
+					reloadData();
+				}
+			}
+			
+			if (editMode) {
+				handleEditing();
+			}
+		}
+		
+		public override function render (): void
+		{
+			super.render();
+		}
+		
+		public function handleEditing ():void
+		{
+			for (var k:int = 0; k <= 3; k++) {
+				if (Input.check(k + Key.DIGIT_0)) {
+					tiles.usePositions = true;
+					
+					tiles.setTile(mouseX, mouseY, k);
+					
+					tiles.usePositions = false;
+				}
+			}
+		}
+		
+		public function reloadData ():void
+		{
+			drawEdges();
+			calculateMasks();
+		}
+		
+		public function drawEdges ():void
+		{
+			tiles.updateAll();
+			
 			var i:int, j:int;
-			
-			tiles.setRect(0, 0, tiles.rows, tiles.columns, 0);
-			
-			tiles.setRect(7, 4, 2, 2, 1);
-			
-			//tiles.drawGraphic(16, 16, new Stamp(RocksGfx));
 			
 			var r:int = 0;
 			var maxR:int = 2;
@@ -90,32 +156,6 @@ package
 			}
 			
 			tiles.usePositions = false;
-			
-			addGraphic(tiles);
-			
-			calculateMasks();
-			
-			player = new Octorok(FP.width*0.5, FP.height*0.5);
-			
-			player.isPlayer = true;
-			
-			add(player);
-			
-			//add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
-			//add(new Leever(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
-			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
-		}
-		
-		public override function update (): void
-		{
-			super.update();
-			
-			if (Input.pressed(Key.R)) FP.world = new Level;
-		}
-		
-		public override function render (): void
-		{
-			super.render();
 		}
 		
 		public function calculateMasks ():void

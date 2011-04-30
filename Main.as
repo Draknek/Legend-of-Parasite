@@ -7,7 +7,7 @@ package
 		public function Main () 
 		{
 			super(256*2, 160*2, 60, true);
-			//FP.screen.scale = 2;
+			FP.screen.scale = 2;
 			//FP.console.enable();
 		}
 		

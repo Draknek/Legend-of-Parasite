@@ -47,7 +47,7 @@ package
 			
 			if (isMoving && ! wasMoving) { walkSprite.index++; }
 			
-			if (doAction1) {
+			if (doAction1 && noseSprite.currentAnim != "spit") {
 				noseSprite.play("spit", true);
 				// TODO: shoot rock
 			} else if (noseSprite.complete) {
