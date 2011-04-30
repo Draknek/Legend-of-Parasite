@@ -2,14 +2,14 @@ package
 {
 	import net.flashpunk.*;
 	
-	[SWF(width = "640", height = "480", backgroundColor="#000000")]
 	public class Main extends Engine
 	{
 		public function Main () 
 		{
-			super(640, 480, 60, true);
+			super(256, 160, 60, true);
 			FP.world = new Level();
-			FP.console.enable();
+			//FP.console.enable();
+			FP.screen.scale = 2;
 		}
 		
 		public override function init (): void
