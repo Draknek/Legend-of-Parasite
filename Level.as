@@ -41,7 +41,8 @@ package
 			hero: [GRASS, SAND],
 			octorok: [GRASS, SAND],
 			leever: [SAND],
-			zola: [WATER]
+			zola: [WATER],
+			projectile: [GRASS, SAND, WATER]
 		};
 		
 		public function Level ()
@@ -67,6 +68,8 @@ package
 			add(player);
 			
 			add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			add(new Leever(SCREEN_WIDTH+16, SCREEN_HEIGHT *0.5));
+			add(new Leever(SCREEN_WIDTH+16, SCREEN_HEIGHT *0.5));
 			add(new Leever(SCREEN_WIDTH+16, SCREEN_HEIGHT *0.5));
 			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 		}
@@ -154,55 +157,76 @@ package
 			tiles.updateAll();
 			
 			var i:int, j:int;
-			
-			var r:int = 0;
-			var maxR:int = 2;
+			var a:uint, b:uint, c:uint;
 			
 			tiles.usePositions = true;
 			
 			for (i = 0; i < WORLD_WIDTH; i += 1) {
 				for (j = 16; j < WORLD_HEIGHT; j += 16) {
-					var j1:int = j;
-					var j2:int = j;
+					a = tiles.getTile(i, j - 1);
+					b = tiles.getTile(i, j);
 					
-					r = FP.rand(maxR);
+					if (a == b) continue;
 					
-					if (r == 0) {
-						j1--;
-					} else if (r == 1) {
-						j2--;
-					} else {
-						continue;
+					tiles.setPixel(i, j - FP.rand(2), BLACK);
+					
+					var d:int = tileDiff(a, b);
+					
+					if (d) {
+						c = color(a, b, d);
+						
+						d -= FP.rand(2);
+						
+						//c = FP.colorLerp(BLACK, tiles.getPixel(i, j + d), 0.25);
+						
+						tiles.setPixel(i, j + d, c);
 					}
-					
-					if (tiles.getTile(i, j1) == tiles.getTile(i, j2)) continue;
-					
-					tiles.setPixel(i, j1, BLACK);
 				}
 			}
 			
 			for (i = 16; i < WORLD_WIDTH; i += 16) {
 				for (j = 0; j < WORLD_HEIGHT; j += 1) {
-					var i1:int = i;
-					var i2:int = i;
+					a = tiles.getTile(i - 1, j);
+					b = tiles.getTile(i, j);
 					
-					r = FP.rand(maxR);
+					if (a == b) continue;
 					
-					if (r == 0) {
-						i1--;
-					} else if (r == 1) {
-						i2--;
-					} else {
-						continue;
+					tiles.setPixel(i - FP.rand(2), j, BLACK);
+					
+					d = tileDiff(a, b);
+					
+					if (d) {
+						c = color(a, b, d);
+						
+						d -= FP.rand(2);
+						
+						//c = FP.colorLerp(BLACK, tiles.getPixel(i, j + d), 0.25);
+						
+						tiles.setPixel(i + d, j, c);
 					}
-					
-					if (tiles.getTile(i1, j) == tiles.getTile(i2, j)) continue;
-					
-					tiles.setPixel(i1, j, BLACK);
 				}
 			}
 			
 			tiles.usePositions = false;
+		}
+		
+		private function tileDiff (a:uint, b:uint): int
+		{
+			if (a == WATER) return 2;
+			if (b == WATER) return -2;
+			if (a == ROCK) return -3;
+			if (b == ROCK) return 3;
+			return 0;
+		}
+		
+		private function color (a:uint, b:uint, diff:int): uint
+		{
+			var tile:uint = (diff > 0) ? b : a;
+			
+			if (tile == ROCK) return BLACK;
+			if (tile == GRASS) return 0xff265f49;
+			
+			return BLACK;
 		}
 		
 		public function calculateMasks ():void

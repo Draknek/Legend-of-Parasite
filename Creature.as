@@ -83,8 +83,8 @@ package
 			if (Input.pressed(Key.LEFT) || Input.pressed(Key.RIGHT)) preferAxis = "y";
 			else if (Input.pressed(Key.UP) || Input.pressed(Key.DOWN)) preferAxis = "x";
 			
-			doAction1 = Input.pressed(Key.X);
-			doAction2 = Input.pressed(Key.C);
+			doAction1 = Input.pressed("ACTION1");
+			doAction2 = Input.pressed("ACTION2");
 		}
 		
 		public function checkDeath ():void
@@ -93,6 +93,11 @@ package
 				var e:Entity = collide(t, x, y);
 				
 				if (e) {
+					if (e is RockSpit) {
+						world.remove(e);
+						e = RockSpit(e).owner;
+					}
+					
 					var c:Creature = this;
 					
 					collidable = false;

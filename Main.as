@@ -1,6 +1,7 @@
 package
 {
 	import net.flashpunk.*;
+	import net.flashpunk.utils.*;
 	
 	public class Main extends Engine
 	{
@@ -9,6 +10,9 @@ package
 			super(256*2, 160*2, 60, true);
 			FP.screen.scale = 2;
 			//FP.console.enable();
+			
+			Input.define("ACTION1", Key.Z, Key.X, Key.C, Key.SPACE, Key.ENTER);
+			Input.define("ACTION2");
 		}
 		
 		public override function init (): void

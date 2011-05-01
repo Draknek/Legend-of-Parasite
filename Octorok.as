@@ -53,8 +53,10 @@ package
 			
 			if (doAction1 && noseSprite.currentAnim != "spit") {
 				noseSprite.play("spit", true);
-				// TODO: shoot rock
 			} else if (noseSprite.complete) {
+				var vx:Number = Math.sin(walkSprite.angle*FP.RAD);
+				var vy:Number = -Math.cos(walkSprite.angle*FP.RAD);
+				world.add(new RockSpit(x+vx*6, y+vy*6, vx*2, vy*2, this));
 				noseSprite.play("wobble");
 			}
 		}
