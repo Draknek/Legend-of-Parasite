@@ -12,6 +12,7 @@ package
 		public var sprite:Spritemap;
 		
 		public var undergrounding:Boolean = false;
+		public var underground:Boolean = false;
 		public var switching:Boolean = false;
 		
 		public function Leever (_x:Number = 0, _y:Number = 0)
@@ -36,12 +37,21 @@ package
 		
 		public override function doMovement (): void
 		{
-			moveBy(dx, dy, "leever_solid");
+			var solidTypes:Array = ["leever_solid"];
 			
-			collidable = true;
-			sprite.visible = true;
+			if (! underground) {
+				solidTypes.push("leever", "solid");
+			}
+			
+			moveBy(dx, dy, solidTypes);
+			
+			if (underground) {
+				solidTypes.push("leever", "solid");
+			}
 			
 			if (doAction1) {
+				if (underground && collideTypes(solidTypes, x, y)) return;
+				
 				switching = true;
 				
 				if (sprite.complete || (sprite.currentAnim != "buried" && sprite.currentAnim != "halfway")) {
@@ -51,10 +61,16 @@ package
 				
 				undergrounding = ! undergrounding;
 			} else if (sprite.complete) {
+				
+				collidable = true;
+				sprite.visible = true;
+				underground = false;
+			
 				if (undergrounding) {
 					if (sprite.currentAnim == "buried") {
 						sprite.visible = false;
 						collidable = false;
+						underground = true;
 					}
 					else if (sprite.currentAnim == "halfway") sprite.play("buried");
 				} else {

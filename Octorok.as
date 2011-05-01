@@ -35,12 +35,12 @@ package
 			
 			type = "octorok";
 			
-			hurtBy = ["leever", "octorok"];
+			hurtBy = ["leever"];
 		}
 		
 		public override function doMovement (): void
 		{
-			moveBy(dx, dy, "octorok_solid");
+			moveBy(dx, dy, ["octorok_solid"]);//, "octorok"]);
 			
 			if (isMoving) {
 				walkSprite.angle = angle;

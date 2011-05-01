@@ -47,19 +47,11 @@ package
 		
 		public function Level ()
 		{
-			tiles = new Tilemap(TilesGfx, WORLD_WIDTH, WORLD_HEIGHT, 16, 16);
+			tiles = Overworld.tiles.getSubMap(0, 0, 16, 10);
 			
-			//tiles.setRect(0, 0, tiles.columns, tiles.rows, ROCK);
-			
-			//tiles.setRect(1, 1, tiles.columns - 2, tiles.rows - 2, GRASS);
-			
-			tiles.loadFromString(new MapData);
-			
-			tiles.setRect(7, 4, 2, 2, SAND);
+			calculateMasks();
 			
 			addGraphic(tiles);
-			
-			reloadData();
 			
 			player = new Octorok(FP.width*0.5, FP.height*0.5);
 			

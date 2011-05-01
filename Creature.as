@@ -30,7 +30,7 @@ package
 		
 		public var hurtBy:Array;
 		
-		public function Creature (_x:Number = 0, _y:Number = 0)
+		public function Creature (_x:int = 0, _y:int = 0)
 		{
 			x = _x;
 			y = _y;
@@ -38,25 +38,40 @@ package
 		
 		public function nativeBehaviour (): void
 		{
+			const TIMER:int = 32;
+			
 			if (moveTimer == 0) {
 				doAction1 = (FP.rand(10) == 0);
 				
 				var r:int = FP.rand(6);
-				
+			
 				if (r != 0) { // r == 0: keep going in same direction
 					inputDX = 0;
 					inputDY = 0;
-					
+				
 					if (r == 1) inputDX = 1;
 					else if (r == 2) inputDX = -1;
 					else if (r == 3) inputDY = 1;
 					else if (r == 4) inputDY = -1;
-				
+			
 					inputDX *= 0.5;
 					inputDY *= 0.5;
 				}
 				
-				moveTimer = 16*2;
+				const BOUNDS:int = 16;
+				
+				var cx:Number = x+inputDX*TIMER - world.camera.x;
+				var cy:Number = y+inputDY*TIMER - world.camera.y;
+				
+				if (cx < BOUNDS || cx > Room.WIDTH - BOUNDS) {
+					inputDX *= -1;
+				}
+				
+				if (cy < BOUNDS || cy > Room.HEIGHT - BOUNDS) {
+					inputDY *= -1;
+				}
+				
+				moveTimer = TIMER;
 			}
 			
 			moveTimer--;
@@ -112,7 +127,7 @@ package
 						complete: function ():void
 						{
 							if (c.isPlayer) {
-								Level(world).player = nextHost;
+								Room(world).player = nextHost;
 								nextHost.isPlayer = true;
 								nextHost.active = true;
 							}
@@ -194,6 +209,8 @@ package
 				if (dx) straighten("y");
 				else if (dy) straighten("x");
 			}
+			
+			trace(dx+", "+dy);
 			
 			isMoving = (dx || dy);
 			doMovement();
