@@ -40,7 +40,7 @@ package
 		
 		public override function doMovement (): void
 		{
-			moveBy(dx, dy, ["octorok_solid"]);//, "octorok"]);
+			moveBy(dx, dy, ["octorok_solid", "octorok"]);
 			
 			if (isMoving) {
 				walkSprite.angle = angle;

@@ -64,7 +64,7 @@ package
 			player = _player;
 			
 			if (! player) {
-				player = new Octorok(camera.x + WIDTH*0.5, camera.y + HEIGHT*0.5);
+				player = new Hero(camera.x + WIDTH*0.5, camera.y + HEIGHT*0.5);
 				player.isPlayer = true;
 			}
 			

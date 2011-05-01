@@ -28,6 +28,10 @@ package
 			setHitbox(8, 8, 4, 0);
 			
 			isPlayer = true;
+			
+			type = "hero";
+			
+			hurtBy = ["leever", "octorok", "octorok_spit"];
 		}
 		
 		public override function doMovement (): void

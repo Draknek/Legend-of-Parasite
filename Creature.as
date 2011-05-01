@@ -146,7 +146,7 @@ package
 						effect.x = nextHost.x;
 						effect.y = nextHost.y;
 						
-						FP.tween(effect, {angle: 45, alpha: 0.0}, 45, {delay: 30});
+						FP.tween(effect, {angle: 45, alpha: 0.0}, 60);
 						
 						world.addGraphic(effect);
 					}
@@ -210,12 +210,12 @@ package
 				else if (dy) straighten("x");
 			}
 			
-			trace(dx+", "+dy);
-			
 			isMoving = (dx || dy);
 			doMovement();
 			
 			checkDeath();
+			
+			layer = -y;
 		}
 		
 		public function get angle (): Number
