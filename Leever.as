@@ -28,12 +28,17 @@ package
 			sprite.play("spin");
 			
 			setHitbox(14, 8, 7, 0);
+			
+			type = "leever";
+			
+			hurtBy = ["octorok_spit"];
 		}
 		
 		public override function doMovement (): void
 		{
 			moveBy(dx, dy, "leever_solid");
 			
+			collidable = true;
 			sprite.visible = true;
 			
 			if (doAction1) {
@@ -47,7 +52,10 @@ package
 				undergrounding = ! undergrounding;
 			} else if (sprite.complete) {
 				if (undergrounding) {
-					if (sprite.currentAnim == "buried") sprite.visible = false;
+					if (sprite.currentAnim == "buried") {
+						sprite.visible = false;
+						collidable = false;
+					}
 					else if (sprite.currentAnim == "halfway") sprite.play("buried");
 				} else {
 					if (sprite.currentAnim == "buried") sprite.play("halfway");

@@ -10,6 +10,9 @@ package
 		public var dx: Number = 0;
 		public var dy: Number = 0;
 		
+		public var inputDX:Number = 0;
+		public var inputDY:Number = 0;
+		
 		public var isPlayer:Boolean = false;
 		
 		public var doAction1:Boolean = false;
@@ -23,6 +26,10 @@ package
 		public var canDiagonal:Boolean = false;
 		public const DIAGONAL_SCALE:Number = 1.0/Math.sqrt(2.0);
 		
+		private var moveTimer:int = 0;
+		
+		public var hurtBy:Array;
+		
 		public function Creature (_x:Number = 0, _y:Number = 0)
 		{
 			x = _x;
@@ -31,10 +38,28 @@ package
 		
 		public function nativeBehaviour (): void
 		{
-			if (FP.rand(8) == 0) {
-				dx = FP.rand(3) - 1;
-				dy = FP.rand(3) - 1;
+			if (moveTimer == 0) {
+				doAction1 = (FP.rand(10) == 0);
+				
+				var r:int = FP.rand(6);
+				
+				if (r != 0) { // r == 0: keep going in same direction
+					inputDX = 0;
+					inputDY = 0;
+					
+					if (r == 1) inputDX = 1;
+					else if (r == 2) inputDX = -1;
+					else if (r == 3) inputDY = 1;
+					else if (r == 4) inputDY = -1;
+				
+					inputDX *= 0.5;
+					inputDY *= 0.5;
+				}
+				
+				moveTimer = 16*2;
 			}
+			
+			moveTimer--;
 		}
 		
 		public function doMovement (): void
@@ -52,8 +77,8 @@ package
 				return;
 			}
 			
-			dx = Number(Input.check(Key.RIGHT)) - Number(Input.check(Key.LEFT));
-			dy = Number(Input.check(Key.DOWN)) - Number(Input.check(Key.UP));
+			inputDX = Number(Input.check(Key.RIGHT)) - Number(Input.check(Key.LEFT));
+			inputDY = Number(Input.check(Key.DOWN)) - Number(Input.check(Key.UP));
 			
 			if (Input.pressed(Key.LEFT) || Input.pressed(Key.RIGHT)) preferAxis = "y";
 			else if (Input.pressed(Key.UP) || Input.pressed(Key.DOWN)) preferAxis = "x";
@@ -62,10 +87,94 @@ package
 			doAction2 = Input.pressed(Key.C);
 		}
 		
+		public function checkDeath ():void
+		{
+			for each (var t:String in hurtBy) {
+				var e:Entity = collide(t, x, y);
+				
+				if (e) {
+					var c:Creature = this;
+					
+					collidable = false;
+					
+					var nextHost:Creature = e as Creature;
+					
+					FP.tween(c, {color: 0xFF0000}, 30, { tweener: FP.tweener });
+					
+					FP.tween(c, {alpha: 0.0}, 30, {
+						tweener: FP.tweener,
+						delay: 15,
+						complete: function ():void
+						{
+							if (c.isPlayer) {
+								Level(world).player = nextHost;
+								nextHost.isPlayer = true;
+								nextHost.active = true;
+							}
+							
+							world.remove(c);
+						}
+					});
+					
+					if (c.isPlayer) {
+						nextHost.active = false;
+						
+						var effect:Image = Image.createRect(32, 32, 0xFFFFFF, 0.5);
+						
+						effect.centerOO();
+						
+						effect.x = nextHost.x;
+						effect.y = nextHost.y;
+						
+						FP.tween(effect, {angle: 45, alpha: 0.0}, 45, {delay: 30});
+						
+						world.addGraphic(effect);
+					}
+					
+					active = false;
+					graphic.active = false;
+					return;
+				}
+			}
+		}
+		
+		public function get color ():uint { return 0xFFFFFF; }
+		
+		public function set color (c:uint):void
+		{
+			if (graphic is Image) {
+				Image(graphic).color = c;
+			} else if (graphic is Graphiclist) {
+				for each (var g:Graphic in Graphiclist(graphic).children) {
+					if (g is Image) {
+						Image(g).color = c;
+					}
+				}
+			}
+		}
+		
+		public function get alpha ():Number { return 1.0; }
+		
+		public function set alpha (n:Number):void
+		{
+			if (graphic is Image) {
+				Image(graphic).alpha = n;
+			} else if (graphic is Graphiclist) {
+				for each (var g:Graphic in Graphiclist(graphic).children) {
+					if (g is Image) {
+						Image(g).alpha = n;
+					}
+				}
+			}
+		}
+		
 		public override function update (): void
 		{
 			wasMoving = isMoving;
 			doInput();
+			
+			dx = inputDX;
+			dy = inputDY;
 			
 			if (canDiagonal && dx && dy) {
 				dx *= DIAGONAL_SCALE;
@@ -83,10 +192,19 @@ package
 			
 			isMoving = (dx || dy);
 			doMovement();
+			
+			checkDeath();
 		}
 		
 		public function get angle (): Number
 		{
+			var theta:Number = (Math.atan2(dy, dx) * FP.DEG);
+			
+			theta = Math.round(theta / 90.0) * 90.0;
+			
+			return theta - 90;
+			
+			// old code
 			if (dx > 0.6) return -90;
 			if (dx < -0.6) return 90;
 			if (dy > 0.6) return 180;

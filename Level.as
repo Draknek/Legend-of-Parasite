@@ -66,7 +66,7 @@ package
 			
 			add(player);
 			
-			//add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
+			add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 			add(new Leever(SCREEN_WIDTH+16, SCREEN_HEIGHT *0.5));
 			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 		}

@@ -32,6 +32,10 @@ package
 			noseSprite.play("wobble");
 			
 			setHitbox(12, 12, 6, 6);
+			
+			type = "octorok";
+			
+			hurtBy = ["leever", "octorok"];
 		}
 		
 		public override function doMovement (): void
