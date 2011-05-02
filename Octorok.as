@@ -35,7 +35,7 @@ package
 			
 			type = "octorok";
 			
-			hurtBy = ["leever"];
+			hurtBy = ["leever", "octorok_spit"];
 		}
 		
 		public override function doMovement (): void

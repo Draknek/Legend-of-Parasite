@@ -114,6 +114,9 @@ package
 				
 				if (e) {
 					if (e is RockSpit) {
+						if (RockSpit(e).owner == this) {
+							continue;
+						}
 						world.remove(e);
 						e = RockSpit(e).owner;
 					}
