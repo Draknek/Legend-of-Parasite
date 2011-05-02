@@ -91,6 +91,12 @@ package
 					}
 				}
 			}
+			
+			var thanks:Text = new Text("Thanks for\nplaying!", 0, 72, {color: Room.BLACK, size: 8, align: "center"});
+			thanks.centerOO();
+			thanks.x = Overworld.WIDTH - 128 + 8;
+			
+			addGraphic(thanks);
 		}
 		
 		public override function begin (): void
