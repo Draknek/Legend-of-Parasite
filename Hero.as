@@ -36,7 +36,7 @@ package
 		
 		public override function doMovement (): void
 		{
-			moveBy(dx, dy, "hero_solid");
+			moveBy(dx, dy, ["hero_solid", "solid"]);
 			
 			sprite.rate = isMoving ? 1 : 0;
 			

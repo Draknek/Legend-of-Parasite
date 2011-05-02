@@ -37,14 +37,16 @@ package
 			x += vx;
 			y += vy;
 			
-			if (collide("projectile_solid", x, y)) {
+			layer = -500;
+			
+			if (collideTypes(["projectile_solid", "solid"], x, y)) {
 				world.remove(this);
 			}
 			
-			if (! onCamera) {
+			/*if (! onCamera) {
 				visible = false;
 				world.remove(this);
-			}
+			}*/
 		}
 		
 		public override function removed ():void

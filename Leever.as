@@ -26,13 +26,27 @@ package
 			sprite.add("spin", [0, 1, 2], 0.2);
 			sprite.add("halfway", [3, 4, 5], 0.2, false);
 			sprite.add("buried", [6, 7, 8], 0.2, false);
-			sprite.play("spin");
+			sprite.play("buried");
 			
 			setHitbox(14, 8, 7, 0);
 			
 			type = "leever";
 			
 			hurtBy = ["octorok_spit"];
+			
+			underground = true;
+			undergrounding = true;
+			collidable = false;
+			sprite.visible = false;
+		}
+		
+		public override function nativeBehaviour (): void
+		{
+			super.nativeBehaviour();
+			
+			if (underground && moveTimer == 16 && FP.rand(4) == 0) {
+				doAction1 = true;
+			}
 		}
 		
 		public override function doMovement (): void

@@ -7,7 +7,7 @@ package
 	{
 		public function Main () 
 		{
-			super(256, 160, 60, true);
+			super(256*2, 160*2, 60, true);
 			FP.screen.scale = 2;
 			FP.console.enable();
 			
@@ -21,12 +21,12 @@ package
 			
 			super.init();
 			
-			//FP.width *= 0.5;
-			//FP.height *= 0.5;
+			FP.width *= 0.5;
+			FP.height *= 0.5;
 			
 			Overworld.init();
 			
-			FP.world = new Room(0, 0);
+			FP.world = new Room(1, 3);
 		}
 		
 		public function sitelock (allowed:*):Boolean

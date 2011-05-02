@@ -42,6 +42,8 @@ package
 			projectile: [GRASS, SAND, WATER]
 		};
 		
+		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock];
+		
 		public var ix:int;
 		public var iy:int;
 		
@@ -63,23 +65,39 @@ package
 			
 			player = _player;
 			
-			if (! player) {
-				player = new Hero(camera.x + WIDTH*0.5, camera.y + HEIGHT*0.5);
-				player.isPlayer = true;
+			for (i = 0; i < tiles.columns; i++) {
+				for (j = 0; j < tiles.rows; j++) {
+					var cx:int = ix*MOD_TILES_WIDE + i;
+					var cy:int = iy*MOD_TILES_HIGH + j;
+					
+					var c:uint = Overworld.creatures.getTile(cx, cy);
+					
+					if (c) {
+						cx = cx*16 + 8;
+						cy = cy*16 + 8;
+						
+						var classGO:Class = CREATURE_CLASSES[c];
+						
+						var e:Entity = new classGO(cx, cy);
+						
+						if (e is Hero) {
+							if (! player) {
+								add(e);
+								player = e as Hero;
+							}
+						} else {
+							add(e);
+						}
+					}
+				}
 			}
-			
-			add(new Octorok(FP.rand(FP.width*0.5)+FP.width*0.35, FP.rand(FP.height*0.5)+FP.height*0.35));
-			add(new Leever(WIDTH+16, HEIGHT *0.5));
-			add(new Leever(WIDTH+16, HEIGHT *0.5));
-			add(new Leever(WIDTH+16, HEIGHT *0.5));
-			//add(new Tektite(FP.rand(FP.width*0.5)+FP.width*0.25, FP.rand(FP.height*0.5)+FP.height*0.25));
 		}
 		
 		public override function begin (): void
 		{
 			camera.x = ix * MOD_WIDTH;
 			camera.y = iy * MOD_HEIGHT;
-			add(player);
+			if (player) add(player);
 		}
 		
 		public override function update (): void
@@ -87,20 +105,10 @@ package
 			//if (Input.pressed(Key.R)) FP.world = new Level;
 			if (Input.pressed(Key.P)) paused = ! paused;
 			
-			/*if (Input.pressed(Key.E)) {
-				editMode = ! editMode;
-				
-				FP.screen.scale = editMode ? 1 : 2;
-				
-				if (editMode) {
-					camera.x -= FP.width*0.5;
-					camera.y -= FP.height*0.5;
-				} else {
-					camera.x = int((player.x - 8) / MOD_WIDTH) * MOD_WIDTH;
-					camera.y = int((player.y - 8) / MOD_HEIGHT) * MOD_HEIGHT;
-					reloadData();
-				}
-			}*/
+			if (Input.pressed(Key.E)) {
+				FP.world = new Editor(ix, iy);
+				return;
+			}
 			
 			if (paused) return;
 			
@@ -132,6 +140,7 @@ package
 			nextRoom = new Room(ix+dx, iy+dy, player);
 			
 			nextRoom.updateLists();
+			//nextRoom.update();
 			
 			FP.tween(camera, {
 				x: camera.x + dx * (MOD_WIDTH),

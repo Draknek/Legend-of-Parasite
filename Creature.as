@@ -26,7 +26,7 @@ package
 		public var canDiagonal:Boolean = false;
 		public const DIAGONAL_SCALE:Number = 1.0/Math.sqrt(2.0);
 		
-		private var moveTimer:int = 0;
+		public var moveTimer:int = 0;
 		
 		public var hurtBy:Array;
 		
@@ -41,7 +41,7 @@ package
 			const TIMER:int = 32;
 			
 			if (moveTimer == 0) {
-				doAction1 = (FP.rand(10) == 0);
+				doAction1 = (FP.rand(8) == 0);
 				
 				var r:int = FP.rand(6);
 			
@@ -76,6 +76,11 @@ package
 			
 			moveTimer--;
 		}
+		
+		/*public override function added ():void
+		{
+			doInput();
+		}*/
 		
 		public function doMovement (): void
 		{

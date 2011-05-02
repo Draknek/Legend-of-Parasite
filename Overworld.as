@@ -9,19 +9,37 @@ package
 	public class Overworld
 	{
 		[Embed(source="images/tiles.png")] public static const TilesGfx: Class;
+		[Embed(source="images/creatures.png")] public static const CreaturesGfx: Class;
 		
 		[Embed(source="map.lvl", mimeType="application/octet-stream")] public static const MapData: Class;
 		
 		public static var tiles:Tilemap;
+		public static var creatures:Tilemap;
 		
-		public static const WIDTH:int = 512 - 16;
-		public static const HEIGHT:int = 320 - 16;
+		public static const WIDTH:int = Room.MOD_WIDTH * 4 + 16;
+		public static const HEIGHT:int = Room.MOD_HEIGHT * 4 + 16;
 		
 		public static function init ():void
 		{
 			tiles = new Tilemap(TilesGfx, WIDTH, HEIGHT, 16, 16);
+			creatures = new Tilemap(CreaturesGfx, WIDTH, HEIGHT, 16, 16);
 			
-			tiles.loadFromString(new MapData);
+			fromString(new MapData);
+		}
+		
+		public static function toString ():String
+		{
+			return tiles.saveToString() + "@SPLIT@" + creatures.saveToString();
+		}
+		
+		public static function fromString (data:String):void
+		{
+			var split:Array = data.split("@SPLIT@");
+			
+			tiles.setRect(0, 0, tiles.columns, tiles.rows, Room.ROCK);
+			tiles.setRect(1, 1, tiles.columns-2, tiles.rows-2, Room.GRASS);
+			tiles.loadFromString(split[0]);
+			creatures.loadFromString(split[1]);
 			
 			reloadData();
 		}
