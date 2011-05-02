@@ -23,15 +23,17 @@ package
 			graphic = new Graphiclist(walkSprite, noseSprite);
 			
 			walkSprite.centerOO();
+			walkSprite.originY = 9;
 			walkSprite.add("walk", [0, 1], 0.1);
 			walkSprite.play("walk");
 			
 			noseSprite.centerOO();
+			noseSprite.originY = 9;
 			noseSprite.add("wobble", [0, 1], 0.05);
 			noseSprite.add("spit", [2, 3, 0], 0.125, false);
 			noseSprite.play("wobble");
 			
-			setHitbox(12, 12, 6, 6);
+			setHitbox(10, 10, 5, 5);
 			
 			type = "octorok";
 			
@@ -64,7 +66,13 @@ package
 		
 		public override function doMovement (): void
 		{
-			moveBy(dx, dy, ["octorok_solid", "octorok", "solid"]);
+			var solidTypes:Array = ["octorok_solid", "octorok", "solid"];
+			
+			if (! isPlayer) {
+				solidTypes.push("spike");
+			}
+			
+			moveBy(dx, dy, solidTypes);
 			
 			if (isMoving) {
 				walkSprite.angle = angle;

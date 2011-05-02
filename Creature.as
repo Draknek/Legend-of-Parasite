@@ -154,8 +154,7 @@ package
 									nextHost.isPlayer = true;
 									nextHost.canMove = true;
 								} else {
-									var cls:Class = died.getClass();
-									nextHost = new cls(room.spawnX, room.spawnY);
+									nextHost = new room.spawnClass(room.spawnX, room.spawnY);
 									nextHost.isPlayer = true;
 									nextHost.canMove = false;
 									

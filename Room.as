@@ -51,6 +51,7 @@ package
 		
 		public var spawnX:int;
 		public var spawnY:int;
+		public var spawnClass:Class;
 		
 		public function Room (i:int, j:int, _player:Creature = null)
 		{
@@ -101,9 +102,14 @@ package
 			
 			addGraphic(thanks);
 			
+			if (! player) {
+				player = new Hero(camera.x + WIDTH*0.5, camera.y + HEIGHT*0.5);
+			}
+			
 			if (player) {
 				spawnX = player.x;
 				spawnY = player.y;
+				spawnClass = player.getClass();
 			}
 			
 		}

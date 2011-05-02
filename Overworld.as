@@ -17,7 +17,7 @@ package
 		public static var creatures:Tilemap;
 		
 		public static const WIDTH:int = Room.MOD_WIDTH * 4 + 16;
-		public static const HEIGHT:int = Room.MOD_HEIGHT * 4 + 16;
+		public static const HEIGHT:int = Room.MOD_HEIGHT * 5 + 16;
 		
 		public static function init ():void
 		{

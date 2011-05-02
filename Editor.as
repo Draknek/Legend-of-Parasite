@@ -47,7 +47,9 @@ package
 			}
 			
 			if (Input.pressed(Key.E)) {
-				FP.world = new Room(1, 3);
+				var i:int = Math.floor(camera.x / Room.MOD_WIDTH) + 1;
+				var j:int = Math.floor(camera.y / Room.MOD_HEIGHT) + 1;
+				FP.world = new Room(i, j);
 				return;
 			}
 			

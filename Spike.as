@@ -38,13 +38,14 @@ package
 				var diffX:int = p.centerX - x;
 				var diffY:int = p.centerY - y;
 				
-				const CLOSE:int = 10;
+				const closeX:int = 6+p.width*0.5;
+				const closeY:int = 6+p.height*0.5;
 				
-				if (diffX >= -CLOSE && diffX <= CLOSE) {
+				if (diffX >= -closeX && diffX <= closeX) {
 					inputDY = (diffY > 0) ? 1 : -1;
 					primed = false;
 				}
-				else if (diffY >= -CLOSE && diffY <= CLOSE) {
+				else if (diffY >= -closeY && diffY <= closeY) {
 					inputDX = (diffX > 0) ? 1 : -1;
 					primed = false;
 				}

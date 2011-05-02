@@ -64,6 +64,10 @@ package
 				solidTypes.push("leever", "solid");
 			}
 			
+			if (! isPlayer) {
+				solidTypes.push("spike");
+			}
+			
 			moveBy(dx, dy, solidTypes);
 			
 			if (underground) {
