@@ -31,7 +31,7 @@ package
 			
 			layer = -500;
 			
-			if (collideTypes(["projectile_solid", "solid"], x, y)) {
+			if (collideTypes(["projectile_solid", "solid", "spike"], x, y)) {
 				world.remove(this);
 			}
 			

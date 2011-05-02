@@ -42,7 +42,7 @@ package
 			projectile: [GRASS, SAND, WATER]
 		};
 		
-		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock];
+		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike];
 		
 		public var ix:int;
 		public var iy:int;
@@ -67,11 +67,6 @@ package
 			reloadData();
 			
 			player = _player;
-			
-			if (player) {
-				spawnX = player.x;
-				spawnY = player.y;
-			}
 			
 			for (i = 0; i < tiles.columns; i++) {
 				for (j = 0; j < tiles.rows; j++) {
@@ -105,6 +100,12 @@ package
 			thanks.x = Overworld.WIDTH - 128 + 8;
 			
 			addGraphic(thanks);
+			
+			if (player) {
+				spawnX = player.x;
+				spawnY = player.y;
+			}
+			
 		}
 		
 		public override function begin (): void

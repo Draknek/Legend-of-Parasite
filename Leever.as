@@ -32,7 +32,7 @@ package
 			
 			type = "leever";
 			
-			hurtBy = ["octorok_spit"];
+			hurtBy = ["octorok_spit", "spike"];
 			
 			underground = true;
 			undergrounding = true;
@@ -46,6 +46,13 @@ package
 			
 			if (underground && moveTimer == 16 && FP.rand(4) == 0) {
 				doAction1 = true;
+			}
+		}
+		
+		public override function checkDeath (): void
+		{
+			if (! underground) {
+				super.checkDeath();
 			}
 		}
 		

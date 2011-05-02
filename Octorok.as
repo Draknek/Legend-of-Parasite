@@ -35,7 +35,7 @@ package
 			
 			type = "octorok";
 			
-			hurtBy = ["leever", "octorok_spit"];
+			hurtBy = ["leever", "octorok_spit", "spike"];
 		}
 		
 		public override function nativeBehaviour (): void
