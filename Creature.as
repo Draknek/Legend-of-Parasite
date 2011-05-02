@@ -30,6 +30,9 @@ package
 		
 		public var hurtBy:Array;
 		
+		public var canMove:Boolean = true;
+		public var isAlive:Boolean = true;
+		
 		public function Creature (_x:int = 0, _y:int = 0)
 		{
 			x = _x;
@@ -113,41 +116,74 @@ package
 				var e:Entity = collide(t, x, y);
 				
 				if (e) {
-					if (e is RockSpit) {
-						if (RockSpit(e).owner == this) {
+					if (e is Projectile) {
+						if (Projectile(e).owner == this) {
 							continue;
 						}
+						
 						world.remove(e);
-						e = RockSpit(e).owner;
+						e = Projectile(e).owner;
 					}
 					
-					var c:Creature = this;
+					var died:Creature = this;
 					
 					collidable = false;
 					
 					var nextHost:Creature = e as Creature;
 					
-					FP.tween(c, {color: 0xFF0000}, 30, { tweener: FP.tweener });
+					var willTransfer:Boolean = true;
 					
-					FP.tween(c, {alpha: 0.0}, 30, {
+					if (!nextHost || ! nextHost.isAlive) {
+						willTransfer = false;
+					}
+					
+					var effect:Image;
+					
+					FP.tween(died, {color: 0xFF0000}, 30, { tweener: FP.tweener });
+					
+					FP.tween(died, {alpha: 0.0}, 30, {
 						tweener: FP.tweener,
 						delay: 15,
 						complete: function ():void
 						{
-							if (c.isPlayer) {
-								Room(world).player = nextHost;
-								nextHost.isPlayer = true;
-								nextHost.active = true;
+							if (died.isPlayer) {
+								var room:Room = Room(world);
+								
+								if (willTransfer) {
+									room.player = nextHost;
+									nextHost.isPlayer = true;
+									nextHost.canMove = true;
+								} else {
+									var cls:Class = died.getClass();
+									nextHost = new cls(room.spawnX, room.spawnY);
+									nextHost.isPlayer = true;
+									nextHost.canMove = false;
+									
+									var nextRoom:Room = new Room(room.ix, room.iy, nextHost);
+									
+									FP.world = nextRoom;
+									nextRoom.active = false;
+									
+									effect = Image.createRect(Room.WIDTH, Room.HEIGHT, 0xFFFFFF, 0.75);
+									effect.scrollX = effect.scrollY = 0;
+									
+									FP.tween(effect, {alpha: 0.0}, 45, function ():void {
+										nextHost.canMove = true;
+										nextRoom.active = true;
+									});
+						
+									nextRoom.addGraphic(effect, -1000);
+								}
 							}
 							
-							world.remove(c);
+							world.remove(died);
 						}
 					});
 					
-					if (c.isPlayer) {
-						nextHost.active = false;
+					if (died.isPlayer && willTransfer) {
+						nextHost.canMove = false;
 						
-						var effect:Image = Image.createRect(32, 32, 0xFFFFFF, 0.5);
+						effect = Image.createRect(32, 32, 0xFFFFFF, 0.5);
 						
 						effect.centerOO();
 						
@@ -159,7 +195,8 @@ package
 						world.addGraphic(effect);
 					}
 					
-					active = false;
+					canMove = false;
+					isAlive = false;
 					graphic.active = false;
 					return;
 				}
@@ -198,30 +235,34 @@ package
 		
 		public override function update (): void
 		{
-			wasMoving = isMoving;
-			doInput();
+			if (canMove) {
+				wasMoving = isMoving;
+				doInput();
 			
-			dx = inputDX;
-			dy = inputDY;
+				dx = inputDX;
+				dy = inputDY;
 			
-			if (canDiagonal && dx && dy) {
-				dx *= DIAGONAL_SCALE;
-				dy *= DIAGONAL_SCALE;
-			}
-			
-			if (! canDiagonal) {
-				if (dx && dy) {
-					this["d"+preferAxis] = 0;
+				if (canDiagonal && dx && dy) {
+					dx *= DIAGONAL_SCALE;
+					dy *= DIAGONAL_SCALE;
 				}
+			
+				if (! canDiagonal) {
+					if (dx && dy) {
+						this["d"+preferAxis] = 0;
+					}
 				
-				if (dx) straighten("y");
-				else if (dy) straighten("x");
+					if (dx) straighten("y");
+					else if (dy) straighten("x");
+				}
+			
+				isMoving = (dx || dy);
+				doMovement();
 			}
 			
-			isMoving = (dx || dy);
-			doMovement();
-			
-			checkDeath();
+			if (isAlive) {
+				checkDeath();
+			}
 			
 			layer = -y;
 		}

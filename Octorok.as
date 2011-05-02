@@ -38,6 +38,30 @@ package
 			hurtBy = ["leever", "octorok_spit"];
 		}
 		
+		public override function nativeBehaviour (): void
+		{
+			super.nativeBehaviour();
+			
+			if (FP.rand(8) == 0) {
+				var p:Creature = Room(world).player;
+				
+				var diffX:int = p.x - x;
+				var diffY:int = p.y - y;
+				
+				if (facingY != 0 && diffX >= -4 && diffX <= 4) {
+					if ((facingY > 0) == (diffY > 0)) {
+						doAction1 = true;
+					}
+				}
+				
+				if (facingX != 0 && diffY >= -4 && diffY <= 4) {
+					if ((facingX > 0) == (diffX > 0)) {
+						doAction1 = true;
+					}
+				}
+			}
+		}
+		
 		public override function doMovement (): void
 		{
 			moveBy(dx, dy, ["octorok_solid", "octorok", "solid"]);
@@ -54,11 +78,21 @@ package
 			if (doAction1 && noseSprite.currentAnim != "spit") {
 				noseSprite.play("spit", true);
 			} else if (noseSprite.complete) {
-				var vx:Number = Math.sin(walkSprite.angle*FP.RAD);
-				var vy:Number = -Math.cos(walkSprite.angle*FP.RAD);
+				var vx:Number = facingX;
+				var vy:Number = facingY;
 				world.add(new RockSpit(x+vx*6, y+vy*6, vx*2, vy*2, this));
 				noseSprite.play("wobble");
 			}
+		}
+		
+		public function get facingX():int
+		{
+			return Math.sin(walkSprite.angle*FP.RAD);
+		}
+		
+		public function get facingY():int
+		{
+			return -Math.cos(walkSprite.angle*FP.RAD);
 		}
 		
 	}

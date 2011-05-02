@@ -49,6 +49,9 @@ package
 		
 		public var nextRoom:Room;
 		
+		public var spawnX:int;
+		public var spawnY:int;
+		
 		public function Room (i:int, j:int, _player:Creature = null)
 		{
 			ix = i;
@@ -64,6 +67,11 @@ package
 			reloadData();
 			
 			player = _player;
+			
+			if (player) {
+				spawnX = player.x;
+				spawnY = player.y;
+			}
 			
 			for (i = 0; i < tiles.columns; i++) {
 				for (j = 0; j < tiles.rows; j++) {
