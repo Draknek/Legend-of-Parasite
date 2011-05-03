@@ -35,9 +35,8 @@ package
 		
 		public override function end (): void
 		{
+			super.end();
 			FP.screen.scale = 2;
-			
-			Overworld.reloadData();
 		}
 		
 		public override function update (): void
@@ -47,9 +46,12 @@ package
 			}
 			
 			if (Input.pressed(Key.E)) {
+				Overworld.reloadData();
+				
 				var i:int = Math.floor(camera.x / Room.MOD_WIDTH) + 1;
 				var j:int = Math.floor(camera.y / Room.MOD_HEIGHT) + 1;
 				FP.world = new Room(i, j);
+				
 				return;
 			}
 			

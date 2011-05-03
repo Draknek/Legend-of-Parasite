@@ -55,18 +55,29 @@ package
 		public override function doMovement (): void
 		{
 			if (dx || dy) {
+				if (collideTypes(["hero_solid", "solid", "spike"], x, y)) return;
+				
 				moveBy(dx*3, dy*3);
 			
 				if (collideTypes(["hero_solid", "solid", "spike"], x, y)) {
 					inputDX = 0;
 					inputDY = 0;
+					
+					x -= dx*1;
+					y -= dy*1;
 				}
 			} else if (! primed) {
 				var diffX:int = spawnX - x;
 				var diffY:int = spawnY - y;
 				
-				if (diffX) x += (diffX > 0) ? 1 : -1;
-				if (diffY) y += (diffY > 0) ? 1 : -1;
+				if (diffX) dx = (diffX > 0) ? 1 : -1;
+				if (diffY) dy = (diffY > 0) ? 1 : -1;
+				
+				if (collide("spike", x, y)) {
+					moveBy(dx, dy);
+				} else {
+					moveBy(dx, dy, "spike");
+				}
 				
 				if (!diffX && !diffY) primed = true;
 			}
