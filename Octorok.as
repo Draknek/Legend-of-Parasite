@@ -44,7 +44,7 @@ package
 		{
 			super.nativeBehaviour();
 			
-			if (FP.rand(8) == 0) {
+			if (FP.rand(16) == 0) {
 				var p:Creature = Room(world).player;
 				
 				var diffX:int = p.x - x;
@@ -53,12 +53,14 @@ package
 				if (facingY != 0 && diffX >= -4 && diffX <= 4) {
 					if ((facingY > 0) == (diffY > 0)) {
 						doAction1 = true;
+						if (moveTimer < 16) moveTimer = 16;
 					}
 				}
 				
 				if (facingX != 0 && diffY >= -4 && diffY <= 4) {
 					if ((facingX > 0) == (diffX > 0)) {
 						doAction1 = true;
+						if (moveTimer < 16) moveTimer = 16;
 					}
 				}
 			}
@@ -103,6 +105,10 @@ package
 			return -Math.cos(walkSprite.angle*FP.RAD);
 		}
 		
+		public override function becamePlayer():void
+		{
+			noseSprite.play("wobble");
+		}
 	}
 }
 

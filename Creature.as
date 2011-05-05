@@ -13,8 +13,6 @@ package
 		public var inputDX:Number = 0;
 		public var inputDY:Number = 0;
 		
-		public var isPlayer:Boolean = false;
-		
 		public var doAction1:Boolean = false;
 		public var doAction2:Boolean = false;
 		
@@ -301,6 +299,20 @@ package
 			
 			this["d"+axis] = delta * 0.25;
 		}
+		
+		public function get isPlayer ():Boolean { return _isPlayer; }
+		public function set isPlayer (b:Boolean):void {
+			if (_isPlayer == b) return;
+			
+			_isPlayer = b;
+			
+			if (_isPlayer) becamePlayer();
+		}
+		
+		public function becamePlayer ():void {}
+		
+		private var _isPlayer:Boolean = false;
+		
 	}
 }
 
