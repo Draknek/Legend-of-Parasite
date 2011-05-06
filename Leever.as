@@ -58,14 +58,10 @@ package
 		
 		public override function doMovement (): void
 		{
-			var solidTypes:Array = ["leever_solid"];
+			var solidTypes:Array = ["leever_solid", "spike"];
 			
 			if (! underground) {
 				solidTypes.push("leever", "solid");
-			}
-			
-			if (! isPlayer) {
-				solidTypes.push("spike");
 			}
 			
 			moveBy(dx, dy, solidTypes);

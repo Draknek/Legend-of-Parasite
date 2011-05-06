@@ -68,11 +68,7 @@ package
 		
 		public override function doMovement (): void
 		{
-			var solidTypes:Array = ["octorok_solid", "octorok", "solid"];
-			
-			if (! isPlayer) {
-				solidTypes.push("spike");
-			}
+			var solidTypes:Array = ["octorok_solid", "octorok", "solid", "spike"];
 			
 			moveBy(dx, dy, solidTypes);
 			
