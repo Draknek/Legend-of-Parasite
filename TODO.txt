@@ -1,0 +1,30 @@
+Enemies:
+Tektites jump
+Like-likes eat rocks
+Gels squeeze in small spaces
+Ropes go fast
+Keese fly?
+
+Fairies which will turn you back to human
+
+Obstacles:
+red/blue barriers
+
+
+Thank you to:
+Dock for graphical advice
+Stephen Lavelle and Terry Cavanagh for motivation
+Chris Hunter for introducing me to Zelda
+The Ludum Dare community
+
+
+
+Enemies:	Killed by:
+
+Zola		Octorok
+Like-Like	Octorok, Zola
+Leever		Octorok, Zola, Like-Like
+Rope		Octorok, Zola, Like-Like, Leever
+Gel		Octorok, Zola, Like-Like, Leever, Rope
+Tektite		Octorok, Zola, Like-Like, Leever, Rope, Gel
+Octorok		Everything!
