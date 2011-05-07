@@ -31,7 +31,7 @@ package
 			
 			type = "hero";
 			
-			hurtBy = ["leever", "octorok", "octorok_spit", "spike"];
+			hurtBy = ["leever", "octorok", "stalfos", "octorok_spit", "spike"];
 		}
 		
 		public override function doMovement (): void

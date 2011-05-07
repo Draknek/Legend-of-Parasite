@@ -11,11 +11,15 @@ package
 	{
 		[Embed(source="images/rock.png")] public static const RockGfx: Class;
 		
-		public function Rock (_x:Number, _y:Number)
+		public function Rock (_x:Number, _y:Number, index:int)
 		{
 			super(_x, _y);
 			
-			graphic = new Stamp(RockGfx, -8, -8);
+			var sprite:Spritemap = new Spritemap(Overworld.CreaturesGfx, 16, 16);
+			sprite.frame = index;
+			sprite.centerOO();
+			
+			graphic = sprite;
 			
 			setHitbox(16, 16, 8, 8);
 			

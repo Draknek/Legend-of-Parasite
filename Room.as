@@ -42,7 +42,7 @@ package
 			projectile: [GRASS, SAND, WATER]
 		};
 		
-		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike];
+		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike, Rock, Stalfos];
 		
 		public var ix:int;
 		public var iy:int;
@@ -82,7 +82,13 @@ package
 						
 						var classGO:Class = CREATURE_CLASSES[c];
 						
-						var e:Entity = new classGO(cx, cy);
+						var e:Entity;
+						
+						try {
+							e = new classGO(cx, cy, c);
+						} catch (exc:Error) {
+							e = new classGO(cx, cy);
+						}
 						
 						if (e is Hero) {
 							if (! player) {
