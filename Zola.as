@@ -19,15 +19,32 @@ package
 			
 			sprite.centerOO();
 			
-			//sprite.add("down", [0, 1], 0.1);
+			setHitbox(16, 16, 8, 8);
 			
-			//sprite.play("down");
+			sprite.add("bob", [0, 1], 0.05);
+			
+			sprite.play("bob");
+			
+			type = "zola";
+			
+			hurtBy = ["octorok_spit"];
 		}
 		
 		public override function doMovement (): void
 		{
-			x += dx;
-			y += dy;
+			moveBy(dx, dy, "zola_solid");
+			
+			if (! isPlayer && doAction1) {
+				var p:Creature = Room(world).player;
+				
+				var vx:Number = p.x - x;
+				var vy:Number = p.y - y;
+				var vz:Number = Math.sqrt(vx*vx + vy*vy);
+				vx *= 2 / vz;
+				vy *= 2 / vz;
+				
+				world.add(new RockSpit(x, y, vx, vy, this));
+			}
 		}
 		
 	}

@@ -11,7 +11,7 @@ package
 	{
 		[Embed(source="images/rockspit.png")] public static const RockGfx: Class;
 		
-		public function RockSpit (_x:Number, _y:Number, _vx:Number, _vy:Number, _owner:Octorok)
+		public function RockSpit (_x:Number, _y:Number, _vx:Number, _vy:Number, _owner:Creature)
 		{
 			super(_x, _y, _vx, _vy, _owner);
 			
