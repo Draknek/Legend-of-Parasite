@@ -11,17 +11,44 @@ package
 		public var tiles:Tilemap;
 		public var creatures:Tilemap;
 		
-		public var activeTilemap:Tilemap;
+		public static var palette:Boolean = false;
+		
+		public var drawable:Boolean = true;
+		
+		public static var tilesGfx:Image = new Image(Overworld.TilesGfx);
+		public static var creaturesGfx:Image = new Image(Overworld.CreaturesGfx);
+		
+		public static var tilesBrush:Spritemap = new Spritemap(Overworld.TilesGfx, 16, 16);
+		public static var creaturesBrush:Spritemap = new Spritemap(Overworld.CreaturesGfx, 16, 16);
+		
+		public static var brush:Spritemap = tilesBrush;
+		
+		public var px:int;
+		public var py:int;
+		public var pw:int;
+		public var ph:int;
 		
 		public function Editor (i:int, j:int)
 		{
 			tiles = Overworld.tiles;
 			creatures = Overworld.creatures;
 			
-			activeTilemap = tiles;
-			
 			addGraphic(tiles);
 			addGraphic(creatures);
+			
+			tilesGfx.scrollX = tilesGfx.scrollY = creaturesGfx.scrollX = creaturesGfx.scrollY = 0;
+			tilesGfx.scale = creaturesGfx.scale = 2;
+			
+			pw = tilesGfx.width * 2;
+			ph = tilesGfx.height * 2 + creaturesGfx.height * 2;
+			
+			px = FP.width - pw*0.5;
+			py = FP.height - ph*0.5;
+			
+			tilesGfx.x = px;
+			tilesGfx.y = py;
+			creaturesGfx.x = px;
+			creaturesGfx.y = py + tilesGfx.height*2;
 			
 			camera.x = i * Room.MOD_WIDTH - FP.width*0.5;
 			camera.y = j * Room.MOD_HEIGHT - FP.height*0.5;
@@ -41,8 +68,8 @@ package
 		
 		public override function update (): void
 		{
-			if (Input.pressed(Key.TAB)) {
-				activeTilemap = (activeTilemap == tiles) ? creatures : tiles;
+			if (Input.pressed(Key.SPACE)) {
+				palette = ! palette;
 			}
 			
 			if (Input.pressed(Key.E)) {
@@ -61,14 +88,38 @@ package
 			camera.y += (Number(Input.pressed(Key.DOWN)) - Number(Input.pressed(Key.UP)))
 				* Room.MOD_HEIGHT;
 			
-			for (var k:int = 0; k <= 9; k++) {
-				if (Input.check(k + Key.DIGIT_0)) {
-					activeTilemap.usePositions = true;
+			if (Input.mouseDown) {
+				if (palette) {
+					palette = false;
+					drawable = false;
 					
-					activeTilemap.setTile(mouseX, mouseY, k);
+					var mx:int = Input.mouseX;
+					var my:int = Input.mouseY;
 					
-					activeTilemap.usePositions = false;
+					if (mx < px || mx >= px + pw || my < py || my >= py+ph) return;
+					
+					mx -= px;
+					my -= py;
+					
+					if (my < tilesGfx.height*2) {
+						brush = tilesBrush;
+					} else {
+						brush = creaturesBrush;
+						my -= tilesGfx.height*2;
+					}
+					
+					brush.setFrame(mx / 32, my / 32);
+				} else if (drawable) {
+					var map:Tilemap = (brush == tilesBrush) ? tiles : creatures;
+					
+					map.usePositions = true;
+					
+					map.setTile(mouseX, mouseY, brush.frame);
+					
+					map.usePositions = false;
 				}
+			} else {
+				drawable = true;
 			}
 		}
 		
@@ -89,6 +140,20 @@ package
 			
 			Draw.line(FP.width*0.5 + 8, -FP.height, FP.width*0.5 + 8, FP.height*2, 0x0);
 			Draw.line(-FP.width, FP.height*0.5 + 8, FP.width*2, FP.height*0.5 + 8, 0x0);
+			
+			if (palette) {
+				FP.point.x = 0;
+				FP.point.y = 0;
+			
+				Draw.rect(px-2, py-2, pw+4, ph+4, Room.WHITE);
+				tilesGfx.render(FP.buffer, FP.zero, FP.zero);
+				creaturesGfx.render(FP.buffer, FP.zero, FP.zero);
+			} else {
+				FP.point.x = int(mouseX/16)*16;
+				FP.point.y = int(mouseY/16)*16;
+			
+				brush.render(FP.buffer, FP.point, camera);
+			}
 		}
 		
 		public override function getWorldData (): *

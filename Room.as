@@ -33,6 +33,7 @@ package
 		public static const ROCK:uint = 3;
 		
 		public static const BLACK:uint = 0xFF111111;
+		public static const WHITE:uint = 0xFFe6e4d5;
 		
 		public const WALKABLE:Object = {
 			hero: [GRASS, SAND],
@@ -42,7 +43,7 @@ package
 			projectile: [GRASS, SAND, WATER]
 		};
 		
-		public const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike, Rock, Stalfos];
+		public static const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike, Rock, Stalfos, SwitchBlock, SwitchBlock, Switch];
 		
 		public var ix:int;
 		public var iy:int;
