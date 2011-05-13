@@ -32,7 +32,7 @@ package
 			sprite.add("walkLeft", [9, 10], 0.05);
 			sprite.add("attackLeft", [11], 0.05, false);
 			
-			sprite.play("walkUp");
+			sprite.play("walkDown");
 			
 			type = "stalfos";
 			

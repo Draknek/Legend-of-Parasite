@@ -40,7 +40,7 @@ package
 		
 		public override function doMovement (): void
 		{
-			var solidTypes:Array = ["hero_solid", "spike"];
+			var solidTypes:Array = ["hero_solid", "spike", "solid"];
 			
 			moveBy(dx*0.5, dy*0.5, solidTypes);
 			

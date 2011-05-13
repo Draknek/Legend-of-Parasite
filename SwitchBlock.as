@@ -38,8 +38,10 @@ package
 			
 			if (up) {
 				type = "solid";
+				layer = -y;
 			} else {
 				type = "underground";
+				layer = 0;
 			}
 		}
 	}

@@ -43,7 +43,7 @@ package
 			projectile: [GRASS, SAND, WATER]
 		};
 		
-		public static const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, null, Rock, Spike, Rock, Stalfos, SwitchBlock, SwitchBlock, Switch, LikeLike];
+		public static const CREATURE_CLASSES:Array = [null, Hero, Octorok, Leever, Zola, Tektite, Rock, Spike, Rock, Stalfos, SwitchBlock, SwitchBlock, Switch, LikeLike, Gel, Rope];
 		
 		public var ix:int;
 		public var iy:int;

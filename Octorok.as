@@ -33,6 +33,9 @@ package
 			noseSprite.add("spit", [2, 3, 0], 0.125, false);
 			noseSprite.play("wobble");
 			
+			walkSprite.angle = 180;
+			noseSprite.angle = 180;
+			
 			setHitbox(10, 10, 5, 5);
 			
 			type = "octorok";
