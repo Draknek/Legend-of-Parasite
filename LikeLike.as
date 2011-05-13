@@ -20,7 +20,7 @@ package
 			sprite.centerOO();
 			
 			sprite.add("wobble", [0, 1], 0.05);
-			sprite.add("eat", [2], 0.025, false);
+			sprite.add("eat", [2, 3, 2, 3, 2, 3], 0.1, false);
 			sprite.play("wobble");
 			
 			setHitbox(16, 16, 8, 8);
