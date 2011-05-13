@@ -5,6 +5,7 @@ package
 	import net.flashpunk.masks.*;
 	import net.flashpunk.utils.*;
 	import flash.utils.ByteArray;
+	import flash.net.SharedObject;
 	
 	public class Overworld
 	{
@@ -19,12 +20,15 @@ package
 		public static const WIDTH:int = Room.MOD_WIDTH * 4 + 16;
 		public static const HEIGHT:int = Room.MOD_HEIGHT * 6 + 16;
 		
+		public static const so:SharedObject = SharedObject.getLocal("parasite", "/");
+		
 		public static function init ():void
 		{
 			tiles = new Tilemap(TilesGfx, WIDTH, HEIGHT, 16, 16);
 			creatures = new Tilemap(CreaturesGfx, WIDTH, HEIGHT, 16, 16);
 			
-			fromString(new MapData);
+			if (so.data.world) fromString(so.data.world);
+			else fromString(new MapData);
 		}
 		
 		public static function toString ():String
@@ -47,6 +51,9 @@ package
 		public static function reloadData ():void
 		{
 			drawEdges();
+			
+			so.data.world = toString();
+			so.flush();
 		}
 		
 		public static function drawEdges ():void
