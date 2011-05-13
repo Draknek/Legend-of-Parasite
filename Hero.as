@@ -30,7 +30,7 @@ package
 			
 			sprite.play("Down");
 			
-			setHitbox(8, 8, 4, 0);
+			setHitbox(14, 8, 7, 0);
 			
 			isPlayer = true;
 			
