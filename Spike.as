@@ -38,8 +38,8 @@ package
 				var diffX:int = p.centerX - x;
 				var diffY:int = p.centerY - y;
 				
-				const closeX:int = 6+p.width*0.5;
-				const closeY:int = 6+p.height*0.5;
+				const closeX:int = 7+p.width*0.5;
+				const closeY:int = 7+p.height*0.5;
 				
 				if (diffX >= -closeX && diffX <= closeX) {
 					inputDY = (diffY > 0) ? 1 : -1;
