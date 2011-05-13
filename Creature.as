@@ -44,38 +44,61 @@ package
 			if (moveTimer == 0) {
 				doAction1 = (FP.rand(8) == 0);
 				
-				var r:int = FP.rand(6);
-			
-				if (r != 0) { // r == 0: keep going in same direction
-					inputDX = 0;
-					inputDY = 0;
-				
-					if (r == 1) inputDX = 1;
-					else if (r == 2) inputDX = -1;
-					else if (r == 3) inputDY = 1;
-					else if (r == 4) inputDY = -1;
-			
-					inputDX *= 0.5;
-					inputDY *= 0.5;
-				}
+				randomDirection(0.5);
 				
 				const BOUNDS:int = 16;
 				
-				var cx:Number = x+inputDX*TIMER - world.camera.x;
-				var cy:Number = y+inputDY*TIMER - world.camera.y;
-				
-				if (cx < BOUNDS || cx > Room.WIDTH - BOUNDS) {
-					inputDX *= -1;
-				}
-				
-				if (cy < BOUNDS || cy > Room.HEIGHT - BOUNDS) {
-					inputDY *= -1;
-				}
+				checkBorder(TIMER, BOUNDS);
 				
 				moveTimer = TIMER;
 			}
 			
 			moveTimer--;
+		}
+		
+		public function randomDirection (scale:Number = 1):void
+		{
+			var r:int = FP.rand(6);
+			
+			if (r != 0) { // r == 0: keep going in same direction
+				inputDX = 0;
+				inputDY = 0;
+			
+				if (r == 1) inputDX = 1;
+				else if (r == 2) inputDX = -1;
+				else if (r == 3) inputDY = 1;
+				else if (r == 4) inputDY = -1;
+		
+				inputDX *= scale;
+				inputDY *= scale;
+			}
+		}
+		
+		public function checkBorder (distance:Number = 16, bounds:Number = 16):void
+		{
+			var cx:Number = x+inputDX*distance - world.camera.x;
+			var cy:Number = y+inputDY*distance - world.camera.y;
+			
+			if (cx < bounds || cx > Room.WIDTH - bounds) {
+				inputDX *= -1;
+			}
+			
+			if (cy < bounds || cy > Room.HEIGHT - bounds) {
+				inputDY *= -1;
+			}	
+		}
+		
+		/// Does not change anything
+		public function checkTerrain (dx:Number, dy:Number, distance:Number = 16, solidType:Object = null):Boolean
+		{
+			var x2:Number = x+dx*distance;
+			var y2:Number = y+dy*distance;
+			
+			if (collideTypes(solidType, x2, y2)) {
+				return false;
+			}
+			
+			return true;
 		}
 		
 		/*public override function added ():void

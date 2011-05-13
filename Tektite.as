@@ -19,20 +19,22 @@ package
 		public var delay:int = 0;
 		public var jumpDelay:int = 10;
 		
+		public var jumpDX:Number = 0;
+		public var jumpDY:Number = 0;
+		
 		// Cleverness
 		public const JUMP_TIME:Number = 15;
 		public const JUMP_HEIGHT:Number = 8;
-		
-		// s = ut + 0.5at^2
-		// s = JUMP_HEIGHT, u = 0, t = JUMP_TIME
-		// a = 2*s/t^2
-		public const G:Number = 2*JUMP_HEIGHT/JUMP_TIME/JUMP_TIME;
 		
 		// s/t = 0.5*(u+v)
 		// s = JUMP_HEIGHT, v = 0, t = JUMP_TIME
 		// u = 2*s/t
 		public const JUMP_V:Number = 2*JUMP_HEIGHT/JUMP_TIME;
 		
+		// v = u + at
+		// v = JUMP_V, u = 0, t = JUMP_TIME
+		// a = v/t
+		public const G:Number = JUMP_V/JUMP_TIME;
 		
 		public function Tektite (_x:Number = 0, _y:Number = 0)
 		{
@@ -50,33 +52,65 @@ package
 			shadow.centerOO();
 			shadow.alpha = 0;
 			
-			graphic = new Graphiclist(shadow, sprite);
+			//graphic = new Graphiclist(shadow, sprite);
+			// N.B. if you re-add the shadow, you need to remove it at death
+			graphic = sprite;
 			
-			setHitbox(16, 16, 8, 8);
+			setHitbox(14, 14, 7, 7);
 			
 			type = "tektite";
 			
 			hurtBy = ["octorok_spit", "spike"];
 		}
 		
+		public override function nativeBehaviour ():void
+		{
+			if (canJump) {
+				randomDirection(1.0);
+				
+				checkBorder();
+			}
+			
+		}
+		
 		public override function doMovement (): void
 		{
 			var solidTypes:Array = ["hero_solid", "solid", "spike"];
 			
-			if (z <= 0 && delay >= jumpDelay) {
-				if (doAction1) {
-					vz = JUMP_V;
-				} else if (dx || dy) {
-					vz = JUMP_V*0.75;
+			if (canJump && (dx || dy)) {
+				// De-straightenify
+				if (dx > -0.4 && dx < 0.4) dx = 0;
+				if (dy > -0.4 && dy < 0.4) dy = 0;
+				
+				vz = JUMP_V*0.5;
+				jumpDX = dx*0.5;
+				jumpDY = dy*0.5;
+				
+				if (checkTerrain(jumpDX, jumpDY, 16, solidTypes)) {
+					if (FP.rand(2)) {
+						if (checkTerrain(dx, dy, 16, solidTypes)) {
+							jumpDX = dx;
+							jumpDY = dy;
+						}
+					}
+				} else {
+					if (checkTerrain(dx*2, dy*2, 16, solidTypes)) {
+						jumpDX = dx;
+						jumpDY = dy;
+						vz = JUMP_V;
+					} else {
+						jumpDX = 0;
+						jumpDY = 0;
+					}
 				}
 			}
 			
-			if (z > 0 || vz > 0) {
+			if (isJumping) {
 				z += vz;
 				vz -= G;
 				sprite.play("jump");
 				
-				moveBy(dx, dy, solidTypes);
+				moveBy(jumpDX, jumpDY);
 				
 				delay = 0;
 				jumpDelay = 5 + FP.rand(15);
@@ -97,6 +131,16 @@ package
 			//shadow.alpha = 0.25 + Math.sqrt(z / JUMP_HEIGHT) * 0.5;
 			
 			super.render();
+		}
+		
+		public function get canJump ():Boolean
+		{
+			return (z <= 0 && delay >= jumpDelay);
+		}
+		
+		public function get isJumping ():Boolean
+		{
+			return (z > 0 || vz > 0);
 		}
 		
 	}
