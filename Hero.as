@@ -36,7 +36,7 @@ package
 			
 			type = "hero";
 			
-			hurtBy = ["leever", "octorok", "stalfos", "octorok_spit", "spike", "likelike", "gel"];
+			hurtBy = ["leever", "octorok", "stalfos", "octorok_spit", "spike", "likelike", "gel", "tektite"];
 		}
 		
 		public override function doMovement (): void
