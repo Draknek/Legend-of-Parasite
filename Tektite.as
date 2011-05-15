@@ -19,11 +19,8 @@ package
 		public var delay:int = 0;
 		public var jumpDelay:int = 10;
 		
-		public var jumpDX:Number = 0;
-		public var jumpDY:Number = 0;
-		
 		// Cleverness
-		public const JUMP_TIME:Number = 15;
+		public const JUMP_TIME:Number = 16;
 		public const JUMP_HEIGHT:Number = 8;
 		
 		// s/t = 0.5*(u+v)
@@ -66,9 +63,14 @@ package
 		public override function nativeBehaviour ():void
 		{
 			if (canJump) {
-				randomDirection(1.0);
+				inputDX = 0;
+				inputDY = 0;
 				
-				checkBorder();
+				if (FP.rand(8) == 0) {
+					randomDirection(FP.choose(0.5, 1.0));
+				
+					checkBorder();
+				}
 			}
 			
 		}
@@ -83,34 +85,41 @@ package
 				if (dy > -0.4 && dy < 0.4) dy = 0;
 				
 				vz = JUMP_V*0.5;
-				jumpDX = dx*0.5;
-				jumpDY = dy*0.5;
+				var jumpTime:int = JUMP_TIME; // N.B. this is actually half jump-time
 				
-				if (checkTerrain(jumpDX, jumpDY, 16, solidTypes)) {
-					if (FP.rand(2)) {
-						if (checkTerrain(dx, dy, 16, solidTypes)) {
-							jumpDX = dx;
-							jumpDY = dy;
-						}
-					}
-				} else {
-					if (checkTerrain(dx*2, dy*2, 16, solidTypes)) {
-						jumpDX = dx;
-						jumpDY = dy;
+				if (! checkTerrain(dx, dy, jumpTime, solidTypes)) {
+					if (checkTerrain(dx, dy, jumpTime*2, solidTypes)) {
 						vz = JUMP_V;
+						jumpTime = jumpTime*2;
 					} else {
-						jumpDX = 0;
-						jumpDY = 0;
+						dx = 0;
+						dy = 0;
 					}
 				}
+				
+				var ix:int = 8*int((x + 4)/8);
+				var iy:int = 8*int((y + 4)/8);
+				
+				if (isPlayer) {
+					if ((dx && (ix%16 == 0)) || (dy && (iy%16 == 0))) {
+						jumpTime *= 0.5
+						vz = JUMP_V*0.5;
+					}
+				}
+				
+				var targetDX:int = ix + dx*jumpTime;
+				var targetDY:int = iy + dy*jumpTime;
+				
+				targetDX += FP.rand(3) - 1;
+				targetDY += FP.rand(3) - 1;
+				
+				FP.tween(this, {x: targetDX, y: targetDY}, jumpTime, {tweener: this});
 			}
 			
 			if (isJumping) {
 				z += vz;
 				vz -= G;
 				sprite.play("jump");
-				
-				moveBy(jumpDX, jumpDY);
 				
 				delay = 0;
 				jumpDelay = 5 + FP.rand(15);
@@ -131,6 +140,11 @@ package
 			//shadow.alpha = 0.25 + Math.sqrt(z / JUMP_HEIGHT) * 0.5;
 			
 			super.render();
+		}
+		
+		public override function updateTweens():void
+		{
+			if (canMove) super.updateTweens();
 		}
 		
 		public function get canJump ():Boolean
