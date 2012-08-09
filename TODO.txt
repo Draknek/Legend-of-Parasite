@@ -7,8 +7,13 @@ Keese fly?
 
 Fairies which will turn you back to human
 
+Stick - toggles red/blue barriers
+Boomerang - replaces stick, stuns enemies
+
 Obstacles:
 red/blue barriers
+
+Statues of creatures - visit as same creature to make burrow into ground
 
 
 Thank you to:
